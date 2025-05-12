@@ -1,0 +1,58 @@
+# Analysis settings
+analysis_settings:
+  country_list:
+    - CA
+    - DE
+    - FR
+    - GB
+    - IN
+    - JP
+    - KR
+    - MX
+    - RU
+    - US
+  
+  engagement_metrics:
+    views: true
+    likes: true
+    comments: true
+    shares: false
+  time_period:
+    start_date: "2023-01-01"
+    end_date: "2023-12-31"
+  trending_category_threshold: 10000 # Minimum number of views for a video to be considered trending
+
+
+# Visualization settings
+visualization_settings:
+  plot_style: "seaborn-darkgrid"  # Formatting type in charts
+  save_plots: true  # Save charts
+  plot_format: "png"  # Default image format(png, svg)
+  plot_dpi: 300  # Image resolution
+  show_plots: true  # View charts inside Jupyter Notebook
+
+
+# Output Settings
+output_settings:
+  save_reports: true  
+  report_format: "pdf"  
+  tables_format: "csv"  
+
+
+# Data processing settings
+preprocessing_settings:
+  drop_missing_values: true  
+  remove_duplicates: true 
+  convert_to_lowercase: false  # Convert texts to lowercase letters
+  columns_to_clean:
+    - tags
+    - title
+    - description
+
+
+# Test settings
+test_settings:
+  run_unit_tests: true  
+  coverage_threshold: 80  # Required coverage rate for tests
+
+

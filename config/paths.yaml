@@ -1,6 +1,45 @@
-data:
-  CA: data/CA/CAvideos.csv
-  US: data/US/USvideos.csv
-outputs:
-  plots: outputs/plots/
-  tables: outputs/tables/
+# Data paths
+data_directory: "./data"
+CA_data: "./data/CA"
+DE_data: "./data/DE"
+FR_data: "./data/FR"
+GB_data: "./data/GB"
+IN_data: "./data/IN"
+JP_data: "./data/JP"
+KR_data: "./data/KR"
+MX_data: "./data/MX"
+RU_data: "./data/RU"
+US_data: "./data/US"
+
+# Output paths
+output_directory: "./outputs"
+plots_directory: "./outputs/plots"
+comparative_plots: "./outputs/plots/comparative"
+country_specific_plots: "./outputs/plots/country_specific"
+reports_directory: "./outputs/reports"
+comparative_reports: "./outputs/reports/comparative"
+country_specific_reports: "./outputs/reports/country_specific"
+tables_directory: "./outputs/tables"
+comparative_tables: "./outputs/tables/comparative"
+country_specific_tables: "./outputs/tables/country_specific"
+
+# Notes and documents paths
+notebooks_directory: "./notebooks"
+comparative_notebooks: "./notebooks/comparative"
+country_specific_notebooks: "./notebooks/country_specific"
+utilities_notebooks: "./notebooks/utilities"
+docs_directory: "./docs"
+
+# Source code paths
+src_directory: "./src"
+analysis_directory: "./src/analysis"
+preprocessing_directory: "./src/preprocessing"
+visualization_directory: "./src/visualization"
+
+# Test paths
+tests_directory: "./tests"
+
+# Documentation paths and auxiliary files
+readme_file: "./README.md"
+license_file: "./LICENSE"
+requirements_file: "./requirements.txt"
