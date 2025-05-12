@@ -1,0 +1,6 @@
+data:
+  CA: data/CA/CAvideos.csv
+  US: data/US/USvideos.csv
+outputs:
+  plots: outputs/plots/
+  tables: outputs/tables/
