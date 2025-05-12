@@ -121,7 +121,7 @@ YouTube-Trending-EDA/
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-repo/YouTube-Trending-EDA.git
+   git clone https://github.com/mahmoud375/YouTube-Trending-EDA.git
    cd YouTube-Trending-EDA
    ```
 
