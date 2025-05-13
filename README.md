@@ -197,5 +197,5 @@ This project is licensed under the terms specified in the `LICENSE` file.
 Mahmoud Elgendy
 
 ## Contact
-For questions or support, please contact the project maintainer at [star7ana@gmail.com].# YouTube-Trending-EDA
+For questions or support, please contact the project maintainer at [star7ana@gmail.com].
 # YouTube-Trending-EDA
