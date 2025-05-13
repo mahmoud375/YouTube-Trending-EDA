@@ -110,7 +110,8 @@ YouTube-Trending-EDA/
 ├── LICENSE                          # License file
 ├── pyproject.toml                   # Project configuration
 ├── README.md                        # Project documentation
-└── requirements.txt                 # Python dependencies
+├── requirements.txt                 # Python dependencies
+└── .conda_env                       # Conda environment file
 ```
 
 ## Installation
