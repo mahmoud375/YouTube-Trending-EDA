@@ -127,8 +127,8 @@ YouTube-Trending-EDA/
 
 2. **Set Up a Virtual Environment** (recommended):
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   python -m venv yt_trend_analysis
+   source yt_trend_analysis/bin/activate  # On Windows: yt_trend_analysis\Scripts\activate
    ```
 
 3. **Install Dependencies**:
