@@ -1,16 +1,16 @@
+from pathlib import Path
 import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from config_loader import *
+project_root = Path(__file__).resolve().parent.parent
+sys.path.append(str(project_root))
+
+from src.config_loader import get_paths_config, get_settings_config
 
 paths = get_paths_config()
-print(paths)
+settings = get_settings_config()
 
-print('##' * 40)
+data_dir = Path(paths['data_directory'])
+countries = settings['analysis_settings']['country_list']
 
-def test_settings_config_loading():
-    settings = get_settings_config()
-    print(settings)
-
-test_settings_config_loading()
+print(f"Working with countries: {countries}")
+print(f"Data path: {data_dir.resolve()}")
