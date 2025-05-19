@@ -19,136 +19,6 @@ def load_data(file_path):
     return pd.read_csv(file_path)
 
 
-def split_data(X, y, test_size=0.2):
-    """
-    Split data into training and test sets.
-
-    Parameters
-    ----------
-    X : array-like or pd.DataFrame
-        Input feature matrix.
-    y : array-like or pd.Series
-        Target array.
-    test_size : float, optional
-        Proportion of the dataset to include as the test set (default is 0.2).
-
-    Returns
-    -------
-    tuple
-        (X_train, X_test, y_train, y_test) where:
-        - X_train and y_train represent the training features and targets.
-        - X_test and y_test represent the test features and targets.
-    """
-    indices = np.random.permutation(len(X))
-    test_set_size = int(len(X) * test_size)
-    test_indices = indices[:test_set_size]
-    train_indices = indices[test_set_size:]
-
-    # Use .iloc if X is a DataFrame; otherwise, index directly
-    if isinstance(X, pd.DataFrame):
-        X_train = X.iloc[train_indices]
-        X_test = X.iloc[test_indices]
-    else:
-        X_train = X[train_indices]
-        X_test = X[test_indices]
-
-    if isinstance(y, (pd.Series, pd.DataFrame)):
-        y_train = y.iloc[train_indices]
-        y_test = y.iloc[test_indices]
-    else:
-        y_train = y[train_indices]
-        y_test = y[test_indices]
-
-    return X_train, X_test, y_train, y_test
-
-
-def shuffle_data_pandas(data):
-    """
-    Shuffle data using pandas sample method.
-
-    Parameters
-    ----------
-    data : pd.DataFrame
-        Input DataFrame to shuffle.
-
-    Returns
-    -------
-    pd.DataFrame
-        Shuffled DataFrame.
-
-    Raises
-    ------
-    TypeError
-        If input is not a pandas DataFrame.
-    ValueError
-        If DataFrame is empty.
-    """
-    if not isinstance(data, pd.DataFrame):
-        raise TypeError("Input must be a pandas DataFrame")
-    if data.empty:
-        raise ValueError("DataFrame is empty")
-
-    return data.sample(frac=1).reset_index(drop=True)
-
-
-def shuffle_data_numpy(data):
-    """
-    Shuffle data using numpy permutation.
-
-    Parameters
-    ----------
-    data : pd.DataFrame
-        Input DataFrame to shuffle.
-
-    Returns
-    -------
-    pd.DataFrame
-        Shuffled DataFrame.
-
-    Raises
-    ------
-    TypeError
-        If input is not a pandas DataFrame.
-    ValueError
-        If DataFrame is empty.
-    """
-    if not isinstance(data, pd.DataFrame):
-        raise TypeError("Input must be a pandas DataFrame")
-    if data.empty:
-        raise ValueError("DataFrame is empty")
-
-    shuffled_indices = np.random.permutation(len(data))
-    return data.iloc[shuffled_indices].reset_index(drop=True)
-
-
-def normalize(X):
-    """
-    Scale features to the range [0, 1].
-
-    Each feature column in X is transformed so that its minimum value becomes 0 and its maximum becomes 1.
-    For features with a constant value (zero variance), the denominator is set to 1 to avoid division-by-zero.
-
-    Parameters
-    ----------
-    X : np.ndarray or pd.DataFrame
-        Input data matrix where rows represent samples and columns represent features.
-
-    Returns
-    -------
-    np.ndarray or pd.DataFrame
-        Scaled data with each feature normalized to the [0, 1] range.
-    """
-    min_val = X.min(axis=0)
-    max_val = X.max(axis=0)
-    denom = max_val - min_val
-    # Avoid division by zero: Replace zeros in denominator with one
-    if isinstance(denom, pd.Series):
-        denom[denom == 0] = 1
-    else:
-        denom[denom == 0] = 1
-    return (X - min_val) / denom
-
-
 def handle_missing_values(df, strategy="mean"):
     """
     Handle missing values in a DataFrame using a specified strategy.
@@ -248,27 +118,17 @@ def drop_columns(df, columns):
     return df.drop(columns=columns, errors="ignore")
 
 
-def feature_target_split(df, target_column):
+def convert_to_datetime(df, date_col, date_format='%y.%d.%m'):
     """
-    Split a DataFrame into features and target.
+    Convert a string date column to datetime.
 
-    Separates the target column from the DataFrame and returns the remaining columns
-    as features.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Input DataFrame.
-    target_column : str
-        Name of the target column.
-
-    Returns
-    -------
-    tuple
-        A tuple (X, y) where:
-        - X is a DataFrame of features,
-        - y is a Series containing the target variable.
+    Args:
+        df (pd.DataFrame): The data frame.
+        date_col (str): Name of the date column.
+        date_format (str): Format of the date strings.
+    
+    Returns:
+        pd.DataFrame: DataFrame with converted date column.
     """
-    X = df.drop(columns=[target_column])
-    y = df[target_column]
-    return X, y
+    df[date_col] = pd.to_datetime(df[date_col], format=date_format)
+    return df
