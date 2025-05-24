@@ -93,7 +93,7 @@ YouTube-Trending-EDA/
 │   │   ├── engagement.py          # Engagement metrics analysis
 │   │   └── __init__.py
 │   ├── preprocessing/              # Data cleaning and merging
-│   │   ├── clean_data.py          # Data cleaning functions
+│   │   ├── data_utils.py          # Data cleaning functions
 │   │   ├── merge_datasets.py      # Dataset merging functions
 │   │   └── __init__.py
 │   └── visualization/              # Visualization modules

@@ -19,6 +19,43 @@ def load_data(file_path):
     return pd.read_csv(file_path)
 
 
+def explore_data(df):
+    """
+    Display basic information about the DataFrame for exploration.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame to explore.
+    """
+    print("Shape:", df.shape)
+    print("\nData Types:\n", df.dtypes)
+    print("\nMissing Values:\n", df.isnull().sum())
+    print("\nSummary Statistics:\n", df.describe(include='all'))
+
+
+def unique_values_with_counts(df, column):
+    """
+    Get unique values in a column along with their counts.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The input DataFrame.
+    column : str
+        The name of the column to analyze.
+
+    Returns
+    -------
+    pd.Series
+        A Series with unique values as index and their counts as values.
+    """
+    if column not in df.columns:
+        raise ValueError(f"Column '{column}' not found in DataFrame.")
+    return df[column].value_counts()
+
+
+
 def handle_missing_values(df, strategy="mean"):
     """
     Handle missing values in a DataFrame using a specified strategy.
@@ -132,3 +169,5 @@ def convert_to_datetime(df, date_col, date_format='%y.%d.%m'):
     """
     df[date_col] = pd.to_datetime(df[date_col], format=date_format)
     return df
+
+
