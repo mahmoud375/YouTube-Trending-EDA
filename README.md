@@ -25,6 +25,7 @@ It includes:
 **Note**: The dataset is not included in this repository due to its size and licensing. Ensure proper attribution to the dataset source. Refer to `docs/data_dictionary.md` for detailed descriptions of data fields.
 
 ## Project Structure
+
 ```
 YouTube-Trending-EDA/
 ├── config/                          # Configuration files
@@ -69,12 +70,9 @@ YouTube-Trending-EDA/
 │   ├── comparative/                # Cross-country analysis
 │   │   ├── Cross_Country_Trends.ipynb
 │   │   └── Engagement_Analysis.ipynb
-│   ├── country_specific/           # Country-specific EDA
-│   │   ├── EDA_CA_Youtube.ipynb
-│   │   └── EDA_US_Youtube.ipynb
-│   └── utilities/                  # Data processing and visualization
-│       ├── Data_Cleaning.ipynb
-│       └── Visualization_Templates.ipynb
+│   └── country_specific/           # Country-specific EDA
+│       ├── EDA_CA_Youtube.ipynb
+│       └── EDA_US_Youtube.ipynb
 ├── outputs/                         # Generated outputs
 │   ├── plots/                      # Visualizations
 │   │   ├── comparative/           # Cross-country plots
@@ -108,10 +106,8 @@ YouTube-Trending-EDA/
 │   └── test_visualization.py      # Tests for visualization modules
 ├── .gitignore                       # Ignored files (e.g., data/, outputs/)
 ├── LICENSE                          # License file
-├── pyproject.toml                   # Project configuration
 ├── README.md                        # Project documentation
 ├── requirements.txt                 # Python dependencies
-└── .conda_env                       # Conda environment file
 ```
 
 ## Installation
