@@ -1,208 +1,180 @@
 import matplotlib.pyplot as plt
+import pandas as pd
 
-# ========== Core Plot Functions ==========
-
-def plot_daily_counts(df, date_col, title='Daily Item Counts'):
+def add_plot_trends_labels(ax, title="", xlabel="", ylabel=""):
     """
-    Plot the count of entries per day based on a date column.
+    Add common plot labels and layout adjustments.
 
-    Args:
-        df (pd.DataFrame): The input DataFrame.
-        date_col (str): The name of the column containing datetime values.
-        title (str): The title of the plot.
-    """
-    daily_counts = df.groupby(date_col).size()
-    plt.figure(figsize=(12, 6))
-    daily_counts.plot(kind='bar', color='skyblue')
-    plt.title(title)
-    plt.xlabel('Date')
-    plt.ylabel('Count')
-    plt.tight_layout()
-    plt.show()
-
-
-def plot_daily_average(df, date_col, value_col, title='Daily Average'):
-    """
-    Plot the average of a specified column per day.
-
-    Args:
-        df (pd.DataFrame): The input DataFrame.
-        date_col (str): Column containing datetime values.
-        value_col (str): Column whose average is to be plotted.
+    Parameters:
+        ax (matplotlib.axes.Axes): The axes object to label.
         title (str): Title of the plot.
+        xlabel (str): Label for the x-axis.
+        ylabel (str): Label for the y-axis.
     """
-    avg_per_day = df.groupby(date_col)[value_col].mean()
-    plt.figure(figsize=(12, 6))
-    avg_per_day.plot(kind='line', marker='o', color='red')
-    plt.title(title)
-    plt.xlabel('Date')
-    plt.ylabel(f'Average {value_col}')
-    plt.grid(True)
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
-    plt.show()
 
-
-def plot_dual_axis(df, date_col, count_col, avg_col, title='Count and Average Over Time'):
+    
+def plot_category_trends(dataframe, category_col='category_name', value_col='views', freq='D'):
     """
-    Plot count and average metrics over time using two Y-axes.
+    Visualize the trend of a specific metric (e.g., views) over time for each content category.
 
-    Args:
-        df (pd.DataFrame): The input DataFrame.
-        date_col (str): Column with datetime values.
-        count_col (str): Column to count (non-null values).
-        avg_col (str): Column to average.
-        title (str): Title of the plot.
+    Parameters:
+        dataframe (pd.DataFrame): Dataset containing YouTube video data.
+        category_col (str): Column name that represents the video category.
+        value_col (str): Column name of the metric to track over time (e.g., 'views').
+        freq (str): Frequency for time grouping ('D' daily, 'W' weekly, 'M' monthly).
+
+    Returns:
+        matplotlib.figure.Figure: A line plot showing trends per category.
     """
-    count_series = df.groupby(date_col)[count_col].count()
-    avg_series = df.groupby(date_col)[avg_col].mean()
-    fig, ax1 = plt.subplots(figsize=(12, 6))
-    ax1.bar(count_series.index, count_series.values, alpha=0.6, color='skyblue')
-    ax1.set_xlabel('Date')
-    ax1.set_ylabel('Count', color='blue')
-    ax1.tick_params(axis='y', labelcolor='blue')
-    ax2 = ax1.twinx()
-    ax2.plot(avg_series.index, avg_series.values, color='red', marker='o')
-    ax2.set_ylabel(f'Average {avg_col}', color='red')
-    ax2.tick_params(axis='y', labelcolor='red')
-    plt.title(title)
-    fig.tight_layout()
-    plt.show()
+    df = dataframe.copy()
+    df['trending_date'] = pd.to_datetime(df['trending_date'])
+    df.set_index('trending_date', inplace=True)
+    grouped = df.groupby(category_col).resample(freq)[value_col].sum().unstack(0)
+    fig, ax = plt.subplots()
+    grouped.plot(ax=ax)
+    add_plot_trends_labels(ax, f"{value_col.capitalize()} Trend by Category", "Date", value_col.capitalize())
+    return fig
 
-# ========== Engagement Specific ==========
 
-def plot_engagement_by_user(df, user_col, value_col, title='Engagement by User'):
+def plot_time_series_trends(dataframe, datetime_col='trending_date', value_col='views', freq='D'):
     """
-    Plot total engagement per user.
+    Plot the aggregate value of a metric over time (e.g., daily total views).
 
-    Args:
-        df (pd.DataFrame): The input DataFrame.
-        user_col (str): Column representing user ID or name.
-        value_col (str): Column representing the value to be summed.
-        title (str): Title of the plot.
+    Parameters:
+        dataframe (pd.DataFrame): Dataset containing YouTube video data.
+        datetime_col (str): Name of the datetime column (usually 'trending_date').
+        value_col (str): Name of the metric column to aggregate and plot.
+        freq (str): Frequency for time grouping ('D' daily, 'W' weekly, 'M' monthly).
+
+    Returns:
+        matplotlib.figure.Figure: A time series line plot.
     """
-    user_engagement = df.groupby(user_col)[value_col].sum().sort_values(ascending=False)
-    user_engagement.plot(kind='bar', figsize=(12, 6), color='green')
-    plt.title(title)
-    plt.xlabel('User')
-    plt.ylabel(f'Total {value_col}')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.show()
+    df = dataframe.copy()
+    df[datetime_col] = pd.to_datetime(df[datetime_col])
+    df.set_index(datetime_col, inplace=True)
+    grouped = df[value_col].resample(freq).sum()
+    fig, ax = plt.subplots()
+    grouped.plot(ax=ax)
+    add_plot_trends_labels(ax, f"{value_col.capitalize()} Over Time", "Date", value_col.capitalize())
+    return fig
 
 
-def plot_engagement_by_post(df, post_col, value_col, title='Engagement by Post'):
+
+def plot_trend_comparison(dataframe, group_col='category_name', value_col='likes'):
     """
-    Plot total engagement per post.
+    Compare the average value of a metric (e.g., likes) across different groups (e.g., categories).
 
-    Args:
-        df (pd.DataFrame): The input DataFrame.
-        post_col (str): Column representing post ID or title.
-        value_col (str): Column representing engagement to be summed.
-        title (str): Title of the plot.
+    Parameters:
+        dataframe (pd.DataFrame): Dataset containing YouTube video data.
+        group_col (str): Column name to group by (e.g., 'category_name').
+        value_col (str): Metric column to average (e.g., 'likes').
+
+    Returns:
+        matplotlib.figure.Figure: Bar chart comparing average metrics across groups.
     """
-    post_engagement = df.groupby(post_col)[value_col].sum().sort_values(ascending=False)
-    post_engagement.plot(kind='bar', figsize=(12, 6), color='purple')
-    plt.title(title)
-    plt.xlabel('Post')
-    plt.ylabel(f'Total {value_col}')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.show()
+    df = dataframe.copy()
+    grouped = df.groupby(group_col)[value_col].mean().sort_values(ascending=False).head(10)
+    fig, ax = plt.subplots()
+    grouped.plot(kind='bar', ax=ax)
+    add_plot_trends_labels(ax, f"Average {value_col.capitalize()} by {group_col}", group_col, value_col.capitalize())
+    return fig
 
 
-def plot_engagement_trends(df, date_col, value_col, title='Engagement Trends Over Time'):
+def create_scatter_plot(x, y, title="", xlabel="", ylabel=""):
     """
-    Plot the total engagement over time (daily).
+    Generate a scatter plot for any two numerical variables.
 
-    Args:
-        df (pd.DataFrame): The input DataFrame.
-        date_col (str): Column containing datetime values.
-        value_col (str): Column representing engagement to be summed.
-        title (str): Title of the plot.
-    """
-    trend_data = df.groupby(date_col)[value_col].sum()
-    trend_data.plot(kind='line', marker='o', figsize=(12, 6), color='orange')
-    plt.title(title)
-    plt.xlabel('Date')
-    plt.ylabel(f'Total {value_col}')
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
-
-# ========== Utility Chart Functions ==========
-
-def create_bar_chart(data, title='Bar Chart', xlabel='', ylabel='', color='blue'):
-    """
-    Create a simple bar chart.
-
-    Args:
-        data (pd.Series): The data to plot.
-        title (str): Title of the plot.
-        xlabel (str): Label for the X-axis.
-        ylabel (str): Label for the Y-axis.
-        color (str): Bar color.
-    """
-    data.plot(kind='bar', figsize=(10, 5), color=color)
-    plt.title(title)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.tight_layout()
-    plt.show()
-
-
-def create_line_chart(data, title='Line Chart', xlabel='', ylabel='', color='black'):
-    """
-    Create a simple line chart.
-
-    Args:
-        data (pd.Series): The data to plot.
-        title (str): Title of the plot.
-        xlabel (str): Label for the X-axis.
-        ylabel (str): Label for the Y-axis.
-        color (str): Line color.
-    """
-    data.plot(kind='line', marker='o', figsize=(10, 5), color=color)
-    plt.title(title)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
-
-# ========== Customization Functions ==========
-
-def customize_plot_style(style='ggplot'):
-    """
-    Apply a Matplotlib style to all plots.
-
-    Args:
-        style (str): Name of the matplotlib style (e.g., 'ggplot', 'seaborn').
-    """
-    plt.style.use(style)
-
-
-def add_plot_labels(xlabel='', ylabel='', title=''):
-    """
-    Add labels and title to the current plot.
-
-    Args:
+    Parameters:
+        x (array-like): Values for the x-axis.
+        y (array-like): Values for the y-axis.
+        title (str): Plot title.
         xlabel (str): X-axis label.
         ylabel (str): Y-axis label.
-        title (str): Plot title.
-    """
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.title(title)
 
-# ========== Output Functions ==========
-
-def save_engagement_plot(filename='engagement_plot.png'):
+    Returns:
+        matplotlib.figure.Figure: The resulting scatter plot.
     """
-    Save the current figure to an image file.
+    fig, ax = plt.subplots()
+    ax.scatter(x, y)
+    add_plot_trends_labels(ax, title, xlabel, ylabel)
+    return fig
 
-    Args:
-        filename (str): The name of the file to save the plot to.
+
+def create_pie_chart(labels, sizes, title=""):
     """
-    plt.savefig(filename, bbox_inches='tight')
-    print(f'Plot saved as {filename}')
+    Create a pie chart showing proportions of different categories.
+
+    Parameters:
+        labels (list): Labels for the pie chart slices.
+        sizes (list): Numeric sizes corresponding to each label.
+        title (str): Title for the chart.
+
+    Returns:
+        matplotlib.figure.Figure: The resulting pie chart.
+    """
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+    ax.set_title(title)
+    return fig
+
+
+def highlight_trend_peaks(ax, data_series):
+    """
+    Annotate the highest value(s) in a data series on a plot.
+
+    Parameters:
+        ax (matplotlib.axes.Axes): The axes object to annotate.
+        data_series (pd.Series): Series containing the values with datetime index.
+    """
+    peaks = data_series[data_series == data_series.max()]
+    for date, value in peaks.items():
+        ax.annotate(f"Peak: {value}", xy=(date, value), xytext=(date, value * 1.1),
+                    arrowprops=dict(arrowstyle="->", color='red'))
+
+
+def annotate_trend_changes(ax, change_points):
+    """
+    Annotate specific change points on a plot.
+
+    Parameters:
+        ax (matplotlib.axes.Axes): Axes object to annotate.
+        change_points (list of tuples): Each tuple contains (x, y, label).
+    """
+    for (x, y, label) in change_points:
+        ax.annotate(label, xy=(x, y), xytext=(x, y * 1.1),
+                    arrowprops=dict(arrowstyle="->", color='blue'))
+
+
+def export_trend_plot(fig, filepath):
+    """
+    Export a matplotlib figure to a file.
+
+    Parameters:
+        fig (matplotlib.figure.Figure): The figure to save.
+        filepath (str): Path to save the file.
+    """
+    fig.savefig(filepath)
+
+
+def adjust_plot_scale(ax, scale_type="linear"):
+    """
+    Adjust the y-axis scale of a plot.
+
+    Parameters:
+        ax (matplotlib.axes.Axes): The axes to modify.
+        scale_type (str): Scale type ('linear', 'log', etc.).
+    """
+    ax.set_yscale(scale_type)
+
+
+def reset_plot_settings():
+    """
+    Reset all matplotlib style settings to default.
+    """
+    plt.rcdefaults()
 
