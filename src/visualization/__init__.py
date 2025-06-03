@@ -1,17 +1,24 @@
 from .plot_engagement import (
     add_plot_engagement_labels,
+    correlation_by_category_before_trend,
+    plot_engagement_disabled_stats,
+    plot_engagement_correlation_before_trend,
+    plot_like_dislike_ratio_vs_views,
     plot_engagement_per_user,
     plot_engagement_per_post,
     plot_engagement_over_time,
     create_engagement_bar_chart,
     create_engagement_line_chart,
+    plot_category_engagement,
     customize_engagement_plot_style,
-    save_engagement_plot
+    save_engagement_plot,
+    visualize_status_impact
 )
 
 from .plot_trends import (
     add_plot_trends_labels,
     plot_category_trends,
+    plot_category_growth,
     plot_time_series_trends,
     plot_trend_comparison,
     create_scatter_plot,
@@ -20,23 +27,35 @@ from .plot_trends import (
     annotate_trend_changes,
     export_trend_plot,
     adjust_plot_scale,
-    reset_plot_settings
+    reset_plot_settings,
+    plot_avg_days_to_trend_by_category,
+    plot_trending_day_distribution,
+    plot_trending_by_month,
+    visualize_top_tags_per_category,
+    plot_clickbait_effect_alternative,
+    plot_channel_category_heatmap
 )
-
 
 __all__ = [
     # plot_engagement
     "add_plot_engagement_labels",
+    "correlation_by_category_before_trend",
+    "plot_engagement_disabled_stats",
+    "plot_engagement_correlation_before_trend",
+    "plot_like_dislike_ratio_vs_views",
     "plot_engagement_per_user",
     "plot_engagement_per_post",
     "plot_engagement_over_time",
     "create_engagement_bar_chart",
     "create_engagement_line_chart",
+    "plot_category_engagement",
     "customize_engagement_plot_style",
     "save_engagement_plot",
+    "visualize_status_impact",
     # plot_trends
     "add_plot_trends_labels",
     "plot_category_trends",
+    "plot_category_growth",
     "plot_time_series_trends",
     "plot_trend_comparison",
     "create_scatter_plot",
@@ -45,5 +64,11 @@ __all__ = [
     "annotate_trend_changes",
     "export_trend_plot",
     "adjust_plot_scale",
-    "reset_plot_settings"
-]  
+    "reset_plot_settings",
+    "plot_avg_days_to_trend_by_category",
+    "plot_trending_day_distribution",
+    "plot_trending_by_month",
+    "visualize_top_tags_per_category",
+    "plot_clickbait_effect_alternative",
+    "plot_channel_category_heatmap"
+]
