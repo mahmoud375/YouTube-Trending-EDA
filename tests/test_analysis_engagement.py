@@ -1,67 +1,69 @@
-import sys
-import os
+import pandas as pd
+import pytest
+
 from pathlib import Path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import sys
 
-from src.analysis.engagement import *
+project_root = Path(__file__).resolve().parent.parent
+sys.path.append(str(project_root))
 
-videos = [
-    {
-        "video_id": "x1",
-        "title": "First Video",
-        "likes": 100,
-        "dislikes": 5,
-        "comment_count": 20,
-        "views": 2000,
-    },
-    {
-        "video_id": "x2",
-        "title": "Second Video",
-        "likes": 150,
-        "dislikes": 3,
-        "comment_count": 30,
-        "views": 3000,
-    }
-]
+from src.analysis.engagement import (
+    compute_engagement_rate_df,
+    compute_like_dislike_ratio_df,
+    summarize_engagement_by_category_df,
+    correlation_by_category_before_trend,
+    like_dislike_ratio_vs_views,
+    engagement_disabled_analysis,
+    compare_status_impact,
+)
 
-from pprint import pprint
+@pytest.fixture
+def sample_df():
+    return pd.DataFrame({
+        "video_id": ["a", "b", "c", "d"],
+        "category_name": ["Music", "Music", "Gaming", "Gaming"],
+        "views": [1000, 2000, 1500, 0],
+        "likes": [100, 150, 80, 20],
+        "dislikes": [10, 5, 5, 0],
+        "comment_count": [20, 30, 10, 5],
+        "comments_disabled": [False, True, False, True],
+        "ratings_disabled": [False, False, True, True],
+        "video_error_or_removed": [False, False, False, True],
+        "days_to_trend": [5, 10, 5, 1],
+    })
 
-# Calculate engagement metrics for the first video
-metrics = calculate_engagement_metrics(videos[0])
-print("Engagement metrics for first video:")
-pprint(metrics)
-# {'likes': 100, 'dislikes': 5, 'comments': 20, 'total_engagement': 125}
+def test_compute_engagement_rate_df(sample_df):
+    result = compute_engagement_rate_df(sample_df)
+    expected = pd.Series([(100+20)/1000*100, (150+30)/2000*100, (80+10)/1500*100, (20+5)/pd.NA])
+    pd.testing.assert_series_equal(result.dropna().reset_index(drop=True), expected.dropna().reset_index(drop=True))
 
-# Compute engagement rate for second video
-rate = compute_engagement_rate(videos[1])
-print(f"\nEngagement rate for second video: {rate:.2f}%")
-# Engagement rate for second video: 6.00%
+def test_compute_like_dislike_ratio_df(sample_df):
+    result = compute_like_dislike_ratio_df(sample_df)
+    expected = pd.Series([100/11, 150/6, 80/6, 20/1])
+    pd.testing.assert_series_equal(result.round(2), expected.round(2))
 
-# Compare engagement between first and second video
-diff = compare_video_engagement(videos[0], videos[1])
-print("\nEngagement difference (video 1 - video 2):")
-pprint(diff)
-# {'likes_diff': -50, 'dislikes_diff': 2, 'comments_diff': -10, 'total_engagement_diff': -58}
+def test_summarize_engagement_by_category_df(sample_df):
+    result = summarize_engagement_by_category_df(sample_df)
+    assert "category_name" in result.columns
+    assert set(result["category_name"]) == {"Music", "Gaming"}
+    assert result["video_count"].sum() == 4
 
-# Generate summary for all videos
-summary = generate_engagement_summary(videos)
-print("\nEngagement summary:")
-pprint(summary)
-# [
-#   {'video_id': 'x1', 'title': 'First Video', 'likes': 100, 'comments': 20, 'views': 2000, 'engagement_rate': 6.0},
-#   {'video_id': 'x2', 'title': 'Second Video', 'likes': 150, 'comments': 30, 'views': 3000, 'engagement_rate': 6.0}
-# ]
+def test_correlation_by_category_before_trend(sample_df):
+    result = correlation_by_category_before_trend(sample_df)
+    assert isinstance(result, pd.Series)
+    assert "avg_views_per_day" in result.index
 
-# Track a new like and comment on first video
-track_like(videos[0])
-track_comment(videos[0], 2)
-print("\nUpdated engagement for first video after tracking:")
-pprint(videos[0])
-# 'likes': 101, 'comment_count': 22
+def test_like_dislike_ratio_vs_views(sample_df, capsys):
+    result = like_dislike_ratio_vs_views(sample_df)
+    assert "avg_like_dislike_ratio" in result.columns
+    captured = capsys.readouterr()
+    assert "Correlation" in captured.out
 
-# Reset engagement stats on second video
-reset_engagement(videos[1])
-print("\nSecond video after resetting engagement:")
-pprint(videos[1])
-# 'likes': 0, 'dislikes': 0, 'comment_count': 0
+def test_engagement_disabled_analysis(sample_df):
+    result = engagement_disabled_analysis(sample_df)
+    assert {"avg_views", "avg_likes", "avg_comments", "count"}.issubset(result.columns)
 
+def test_compare_status_impact(sample_df):
+    result = compare_status_impact(sample_df)
+    assert isinstance(result, pd.DataFrame)
+    assert ("comments_disabled", "views") in result.index

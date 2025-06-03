@@ -1,64 +1,81 @@
-import sys
-import os
-from pathlib import Path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 import pandas as pd
+import numpy as np
+import pytest
+from io import StringIO
+
 from pathlib import Path
-from src.config_loader import get_paths_config
-from src.preprocessing.data_utils import load_data, unique_values_with_counts
-from src.preprocessing.merge_datasets import dataset_merger
+import sys
 
-def test_load_data_csv_and_json():
-    paths = get_paths_config()
+project_root = Path(__file__).resolve().parent.parent
+sys.path.append(str(project_root))
 
-    csv_path = Path(paths['CA_data']) / 'CAvideos.csv'
-    json_path = Path(paths['CA_data']) / 'CA_category_id.json'
+from src.preprocessing.data_utils import (
+    load_data,
+    explore_data,
+    unique_values_with_counts,
+    handle_missing_values,
+    encode_categorical,
+    drop_columns,
+    convert_to_datetime,
+    save_table
+)
 
-    df_csv = load_data(csv_path)
-    df_json = load_data(json_path)
-
-    assert isinstance(df_csv, pd.DataFrame)
-    assert not df_csv.empty
-
-    assert isinstance(df_json, (dict, list, pd.DataFrame))
-
-    if isinstance(df_json, dict):
-        assert "items" in df_json
-    elif isinstance(df_json, list):
-        assert len(df_json) > 0
-    elif isinstance(df_json, pd.DataFrame):
-        assert not df_json.empty
-
-
-def test_dataset_merger_returns_dataframe():
-    paths = get_paths_config()
-
-    csv_path = Path(paths['CA_data']) / 'CAvideos.csv'
-    json_path = Path(paths['CA_data']) / 'CA_category_id.json'
-    merged_df = dataset_merger([str(csv_path), str(json_path)])
-
-    assert isinstance(merged_df, pd.DataFrame)
-    assert not merged_df.empty
-    assert 'title' in merged_df.columns or 'video_id' in merged_df.columns  # adjust based on structure
-
-def test_unique_values_with_counts():
-    df = pd.DataFrame({
-        'Color': ['Red', 'Blue', 'Red', 'Green', 'Blue', 'Blue', 'Red'],
-        'Size': ['S', 'M', 'L', 'S', 'M', 'L', 'M']
+@pytest.fixture
+def dummy_df():
+    return pd.DataFrame({
+        "A": [1, 2, np.nan, 4],
+        "B": ["x", "y", "x", None],
+        "C": [10, 20, 30, 40],
     })
 
-    color_counts = unique_values_with_counts(df, 'Color')
+def test_unique_values_with_counts(dummy_df):
+    result = unique_values_with_counts(dummy_df, "B")
+    assert result["x"] == 2
+    assert result["y"] == 1
 
-    assert isinstance(color_counts, pd.Series)
+def test_handle_missing_mean(dummy_df):
+    filled = handle_missing_values(dummy_df, strategy="mean")
+    assert not filled.isnull().any().any()
+    assert filled.loc[2, "A"] == pytest.approx((1 + 2 + 4) / 3)
 
-    assert color_counts['Red'] == 3
-    assert color_counts['Blue'] == 3
-    assert color_counts['Green'] == 1
+def test_handle_missing_differentiated(dummy_df):
+    filled = handle_missing_values(dummy_df, strategy="differentiated")
+    assert not filled.isnull().any().any()
+    assert filled.loc[2, "A"] == 2.0  # median of [1, 2, 4]
+    assert filled.loc[3, "B"] == "x"  # mode of ["x", "y", "x"]
 
+def test_encode_categorical(dummy_df):
+    encoded = encode_categorical(dummy_df)
+    assert np.issubdtype(encoded["B"].dtype, np.integer)
 
+def test_drop_columns(dummy_df):
+    dropped = drop_columns(dummy_df, ["B", "D"])  # D doesn't exist
+    assert "B" not in dropped.columns
+    assert "A" in dropped.columns
 
-if __name__ == '__main__':
-    #test_unique_values_with_counts()
-    #test_dataset_merger_returns_dataframe()
-    test_load_data_csv_and_json()
+def test_convert_to_datetime():
+    df = pd.DataFrame({"date": ["25.01.06", "23.15.05"]})
+    converted = convert_to_datetime(df, "date", "%y.%d.%m")
+    assert np.issubdtype(converted["date"].dtype, np.datetime64)
+    assert converted["date"].iloc[0].year == 2025
+
+def test_save_table_csv(tmp_path):
+    df = pd.DataFrame({"a": [1, 2], "b": ["x", "y"]})
+    path = tmp_path / "test_output"
+    save_table(df, str(path), format="csv")
+    loaded = pd.read_csv(f"{path}.csv")
+    pd.testing.assert_frame_equal(df, loaded)
+
+def test_load_data():
+    sample_csv = "col1,col2\n1,x\n2,y"
+    df = load_data(StringIO(sample_csv))
+    assert df.shape == (2, 2)
+    assert list(df.columns) == ["col1", "col2"]
+
+def test_handle_missing_invalid_strategy(dummy_df):
+    with pytest.raises(ValueError):
+        handle_missing_values(dummy_df, strategy="invalid")
+
+def test_unique_values_column_not_found(dummy_df):
+    with pytest.raises(ValueError):
+        unique_values_with_counts(dummy_df, "Z")

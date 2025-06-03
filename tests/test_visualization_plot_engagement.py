@@ -1,78 +1,96 @@
-import sys
-import os
-from pathlib import Path
+import pytest
 import pandas as pd
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 
-# Add parent directory to sys.path to import from src.visualization
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from pathlib import Path
+import sys
 
-from src.visualization.plot_engagement import (
-    customize_engagement_plot_style,
-    plot_engagement_per_user,
-    plot_engagement_per_post,
-    plot_engagement_over_time,
-    create_engagement_bar_chart,
-    create_engagement_line_chart
-)
+project_root = Path(__file__).resolve().parent.parent
+sys.path.append(str(project_root))
 
-def create_sample_dataframe():
-    """
-    Create a sample DataFrame to test the plotting functions.
-    
-    Returns:
-        pd.DataFrame: Sample YouTube-like engagement data.
-    """
-    data = {
-        'channel_title': ['UserA', 'UserB', 'UserA', 'UserC', 'UserB', 'UserA', 'UserD', 'UserC', 'UserE', 'UserD'],
-        'video_id': ['vid1', 'vid2', 'vid3', 'vid4', 'vid5', 'vid6', 'vid7', 'vid8', 'vid9', 'vid10'],
-        'likes': [100, 150, 200, 50, 300, 120, 80, 60, 90, 40],
-        'dislikes': [10, 20, 15, 5, 30, 12, 8, 6, 9, 4],
-        'comment_count': [5, 7, 3, 8, 9, 2, 6, 5, 1, 0],
-        'trending_date': pd.date_range(start='2023-01-01', periods=10, freq='D')
-    }
-    return pd.DataFrame(data)
+from src.visualization.plot_engagement import *
 
-def main():
-    # Prepare data
-    df = create_sample_dataframe()
+@pytest.fixture
+def basic_df():
+    return pd.DataFrame({
+        "video_id": ["v1", "v2", "v3", "v4"],
+        "category_name": ["Music", "Gaming", "Education", "Music"],
+        "views": [1000, 2000, 1500, 2500],
+        "likes": [100, 200, 150, 250],
+        "dislikes": [10, 20, 15, 25],
+        "comment_count": [30, 50, 40, 60],
+        "comments_disabled": [False, True, False, True],
+        "ratings_disabled": [False, False, True, True],
+        "days_to_trend": [1, 2, 3, 4],
+        "channel_title": ["Channel A", "Channel B", "Channel A", "Channel C"],
+        "trending_date": pd.to_datetime(["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04"])
+    })
 
-    # Set a consistent visual style for all plots
-    customize_engagement_plot_style("ggplot")
 
-    print("Generating plots...")
+def test_plot_engagement_disabled_stats(basic_df):
+    fig = plot_engagement_disabled_stats(basic_df)
+    assert isinstance(fig, plt.Figure)
 
-    # Plot top 10 users by likes
-    fig1 = plot_engagement_per_user(df, user_col='channel_title', metric='likes')
 
-    # Plot top 10 videos by comment count
-    fig2 = plot_engagement_per_post(df, id_col='video_id', metric='comment_count')
+def test_plot_engagement_correlation_before_trend(basic_df):
+    fig = plot_engagement_correlation_before_trend(basic_df)
+    assert isinstance(fig, plt.Figure)
 
-    # Plot likes over time (daily frequency)
-    fig3 = plot_engagement_over_time(df, datetime_col='trending_date', metric='likes', freq='D')
 
-    # Create a custom bar chart example
-    fig4 = create_engagement_bar_chart(
-        x=['Category A', 'Category B', 'Category C'],
-        y=[10, 20, 15],
-        title="Custom Bar Chart",
-        xlabel="Category",
-        ylabel="Value"
+def test_plot_like_dislike_ratio_vs_views():
+    df = pd.DataFrame({
+        "category_name": ["Music", "Gaming", "Education"],
+        "avg_like_dislike_ratio": [10, 8, 12],
+        "avg_views": [2000, 1500, 1800]
+    })
+    fig = plot_like_dislike_ratio_vs_views(df)
+    assert isinstance(fig, plt.Figure)
+
+
+def test_plot_engagement_per_user(basic_df):
+    fig = plot_engagement_per_user(basic_df, metric="likes")
+    assert isinstance(fig, plt.Figure)
+
+
+def test_plot_engagement_per_post(basic_df):
+    fig = plot_engagement_per_post(basic_df, metric="comment_count")
+    assert isinstance(fig, plt.Figure)
+
+
+def test_plot_engagement_over_time(basic_df):
+    fig = plot_engagement_over_time(basic_df, metric="likes")
+    assert isinstance(fig, plt.Figure)
+
+
+def test_create_engagement_bar_chart():
+    x = ["A", "B", "C"]
+    y = [10, 20, 15]
+    fig = create_engagement_bar_chart(x, y, "Test Chart", "X", "Y")
+    assert isinstance(fig, plt.Figure)
+
+
+def test_create_engagement_line_chart():
+    x = pd.date_range(start="2024-01-01", periods=3)
+    y = [10, 15, 12]
+    fig = create_engagement_line_chart(x, y, "Line Chart", "Time", "Value")
+    assert isinstance(fig, plt.Figure)
+
+
+def test_plot_category_engagement():
+    df = pd.DataFrame({
+        "category_name": ["Music", "Gaming", "Education"],
+        "avg_engagement_rate": [0.2, 0.3, 0.25]
+    })
+    fig = plot_category_engagement(df, metric="avg_engagement_rate")
+    assert isinstance(fig, plt.Figure)
+
+
+def test_visualize_status_impact():
+    # Simulated MultiIndex DataFrame
+    index = pd.MultiIndex.from_product(
+        [["comments_disabled", "ratings_disabled"], ["views", "likes", "dislikes", "comment_count"]],
+        names=["Flag", "Metric"]
     )
-
-    # Create a custom line chart example
-    fig5 = create_engagement_line_chart(
-        x=pd.date_range('2023-01-01', periods=3),
-        y=[10, 20, 15],
-        title="Custom Line Chart",
-        xlabel="Date",
-        ylabel="Value"
-    )
-
-    # Show all figures at once and wait for user to close them
-    plt.show()
-
-    print("All plots generated successfully.")
-
-if __name__ == "__main__":
-    main()
+    df = pd.DataFrame([1e5, 2e4, 1e3, 5e2, 9e4, 1.5e4, 800, 400], index=index)
+    fig = visualize_status_impact(df)
+    assert isinstance(fig, plt.Figure)
