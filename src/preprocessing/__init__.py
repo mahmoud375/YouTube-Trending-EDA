@@ -5,7 +5,8 @@ from .data_utils import (
     load_data,
     convert_to_datetime,
     explore_data,
-    unique_values_with_counts
+    unique_values_with_counts,
+    save_table
 )
 
 from .merge_datasets import dataset_merger
@@ -19,4 +20,5 @@ __all__ = [
     "dataset_merger",
     "convert_to_datetime",
     "explore_data",
-    "unique_values_with_counts"]
+    "unique_values_with_counts",
+    "save_table"]

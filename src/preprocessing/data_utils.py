@@ -171,3 +171,22 @@ def convert_to_datetime(df, date_col, date_format='%y.%d.%m'):
     return df
 
 
+def save_table(df, filename: str, format: str = "csv"):
+    """
+    Save a DataFrame table to disk.
+
+    Args:
+        df (pd.DataFrame): Table to save.
+        filename (str): File path without extension.
+        format (str): One of ["csv", "excel", "html"].
+    """
+    format = format.lower()
+    if format == "csv":
+        df.to_csv(f"{filename}.csv", index=False)
+    elif format == "excel":
+        df.to_excel(f"{filename}.xlsx", index=False)
+    elif format == "html":
+        df.to_html(f"{filename}.html", index=False)
+    else:
+        raise ValueError("Unsupported format. Choose from 'csv', 'excel', or 'html'.")
+
