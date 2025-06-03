@@ -4,7 +4,7 @@ This guide explains how to install and run the YouTube Trending Data Analysis pr
 
 ---
 
-## 1 Prerequisites
+## 1. Prerequisites
 
 Make sure you have the following installed:
 
@@ -15,7 +15,7 @@ Make sure you have the following installed:
 
 ---
 
-## 2 Clone the Repository
+## 2. Clone the Repository
 
 ```bash
 git clone https://github.com/mahmoud375/YouTube-Trending-EDA.git
@@ -24,7 +24,7 @@ cd YouTube-Trending-EDA
 
 ---
 
-## 3 Create a Virtual Environment
+## 3. Create a Virtual Environment
 
 ### Using `venv`:
 
@@ -43,7 +43,7 @@ conda activate yt_trend_analysis
 
 ---
 
-## 4 Install Dependencies
+## 4. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -51,34 +51,55 @@ pip install -r requirements.txt
 
 ---
 
-## 5 Configure Project Settings
+## 5. Configure Project Settings
 
-Make sure the following files exist in the `config/` folder:
+Ensure the following files exist and are correctly configured in the `config/` directory:
 
-* `paths.yaml` – contains paths for data input/output
-* `settings.yaml` – contains general project options (e.g., countries to analyze)
+* `paths.yaml`: File paths for input data and output directories
+* `settings.yaml`: General project options (e.g., countries to analyze, visualization parameters)
 
-Edit these files as needed before running the pipeline.
+Edit these files as needed to match your environment.
 
 ---
 
-## 6 Run Scripts
+## 6. Setup Directory Structure
 
-### Data Cleaning & Merging:
+Ensure your directories are correctly set up before running analysis:
+
+```bash
+# Create required directories (if not already present)
+mkdir -p data/CA data/DE data/FR data/GB data/IN data/JP data/KR data/MX data/RU data/US
+mkdir -p outputs/plots/comparative
+mkdir -p outputs/plots/country_specific/CA
+mkdir -p outputs/plots/country_specific/US
+mkdir -p outputs/tables/comparative
+mkdir -p outputs/tables/country_specific
+```
+
+Place the CSV and JSON files inside each respective country directory, e.g.,:
+
+* `data/US/USvideos.csv`
+* `data/US/US_category_id.json`
+
+---
+
+## 7. Run Scripts
+
+### Data Cleaning & Merging
 
 ```bash
 python src/preprocessing/clean_data.py
 python src/preprocessing/merge_datasets.py
 ```
 
-### Analysis:
+### Analysis
 
 ```bash
 python src/analysis/category_trends.py
 python src/analysis/engagement.py
 ```
 
-### Visualization:
+### Visualization
 
 ```bash
 python src/visualization/plot_trends.py
@@ -87,7 +108,7 @@ python src/visualization/plot_engagement.py
 
 ---
 
-## 7 Launch Jupyter Notebooks
+## 8. Launch Jupyter Notebooks
 
 To explore and visualize the data interactively:
 
@@ -95,13 +116,17 @@ To explore and visualize the data interactively:
 jupyter notebook
 ```
 
-Then open the notebooks in the `notebooks/` folder:
+Then open relevant notebooks:
 
 * `notebooks/country_specific/EDA_US_Youtube.ipynb`
+* `notebooks/country_specific/EDA_CA_Youtube.ipynb`
 * `notebooks/comparative/Cross_Country_Trends.ipynb`
+* `notebooks/comparative/Engagement_Analysis.ipynb`
 
 ---
 
-## Done!
+## ✅ Done!
 
-You’re all set to start analyzing YouTube trending videos across the globe! 
+You’re all set to analyze YouTube trending videos across multiple countries!
+
+For any issues or contributions, refer to the README or open a GitHub issue.
