@@ -32,9 +32,6 @@ It includes:
 After downloading and extracting the dataset, make sure the following directories exist (create them manually if not already present):
 
 ```bash
-# Create config directory
-mkdir -p config
-
 # Create country-specific data directories
 mkdir -p data/{CA,DE,FR,GB,IN,JP,KR,MX,RU,US}
 
@@ -60,9 +57,9 @@ YouTube-Trending-EDA/
 │   ├── CA/                         # Canada data
 │   │   ├── CA_category_id.json
 │   │   └── CAvideos.csv
-│   ├── DE/                         # Germany data
+│   ├── DE/                          # Germany data
 │   ├── ...
-│   └── US/                         # United States data
+│   └── US/                          # United States data
 │       ├── US_category_id.json
 │       └── USvideos.csv
 ├── docs/                            # Documentation
@@ -77,12 +74,12 @@ YouTube-Trending-EDA/
 │       ├── EDA_CA_Youtube.ipynb
 │       └── EDA_US_Youtube.ipynb
 ├── outputs/                         # Generated outputs
-│   ├── plots/                      # Visualizations
-│   │   ├── comparative/           # Cross-country plots
-│   │   └── country_specific/      # Country-specific plots (e.g., CA, US, etc.)
-│   └── tables/                     # Summary tables (CSV format)
-│       ├── comparative/           # Cross-country summary data
-│       └── country_specific/      # Country-specific summary tables
+│   ├── plots/                       # Visualizations
+│   │   ├── comparative/             # Cross-country plots
+│   │   └── country_specific/        # Country-specific plots (e.g., CA, US, etc.)
+│   └── tables/                      # Summary tables (CSV format)
+│       ├── comparative/             # Cross-country summary data
+│       └── country_specific/        # Country-specific summary tables
 ├── src/                             # Python source code
 │   ├── analysis/
 │   │   ├── category_trends.py
@@ -133,31 +130,41 @@ YouTube-Trending-EDA/
    * Update `config/paths.yaml` to reflect data and output paths.
    * Adjust `config/settings.yaml` for analysis parameters (e.g., visualization settings).
 
-## Usage
+## 📘 Usage
 
-1. **Data Preparation**:
+1. **Per-Country Workflow**:
 
-   * Ensure the dataset is placed in the `data/` directory.
-   * Run the data cleaning notebook to preprocess the data:
+   * For each country, use a **single notebook** that includes:
 
-     ```bash
-     jupyter notebook notebooks/utilities/Data_Cleaning.ipynb
-     ```
+     * Data cleaning
+     * Exploratory data analysis (EDA)
+     * Visualizations
+   * Located in:
+     `notebooks/country_specific/`
+     Example notebooks:
 
-2. **Exploratory Data Analysis**:
+     * `EDA_US_Youtube.ipynb`
+     * `EDA_EG_Youtube.ipynb`
 
-   * For country-specific analysis, use notebooks in `notebooks/country_specific/` (e.g., `EDA_CA_Youtube.ipynb`).
-   * For cross-country comparisons, use notebooks in `notebooks/comparative/` (e.g., `Cross_Country_Trends.ipynb`).
+2. **Cross-Country Comparison**:
 
-3. **Visualization**:
+   * For multi-country analysis and trends, use:
+     `notebooks/comparative/Cross_Country_Trends.ipynb`
 
-   * Generate plots using scripts in `src/visualization/` (e.g., `plot_engagement.py`).
-   * Outputs are saved in `outputs/plots/`.
-   * Use the visualization templates notebook for reusable designs:
+3. **Outputs Structure**:
 
-     ```bash
-     jupyter notebook notebooks/utilities/Visualization_Templates.ipynb
-     ```
+   All generated plots and summary tables are saved in the `outputs/` directory:
+
+   ```
+   outputs/
+   ├── plots/
+   │   ├── comparative/         # Cross-country visualizations
+   │   └── country_specific/    # Visualizations per country (e.g., US, EG)
+   └── tables/
+       ├── comparative/         # Summary data for cross-country analysis
+       └── country_specific/    # Per-country summary tables (CSV format)
+   ```
+
 
 4. **Run Tests**:
 
