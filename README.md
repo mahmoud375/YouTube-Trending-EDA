@@ -185,41 +185,54 @@ YouTube-Trending-EDA/
 
 ## 🔍 Key Insights
 
-This project uncovers several key insights from trending YouTube videos across different countries:
+> This project aims to uncover key patterns and insights from YouTube trending video data, focusing on categories, engagement metrics, timing, metadata strategies, creator influence, and video status.
 
-1. **Category-Based Patterns**
+---
 
-   * Music and Entertainment consistently lead in trending frequency and average viewership.
-   * Viewer engagement (likes, comments) varies significantly by category; Gaming and News often have higher comment activity, while Music garners more likes.
-   * Categories show distinct trends over time, including growth, saturation, or decline.
+**1. Category-Based Insights**
 
-2. **Engagement & Popularity Drivers**
+- Which `category_name` has the highest average views or trending frequency?
+- How do viewer engagement metrics differ across categories like Music, News, Gaming, etc.?
+- What trends can we observe overall?
 
-   * Likes and comments show stronger correlation with high view counts than dislikes.
-   * A higher like-to-dislike ratio often correlates with better video performance.
-   * Videos with engagement restrictions (disabled comments or ratings) tend to perform differently and sometimes trend under unusual conditions.
+---
 
-3. **Temporal Trends**
+**2. Engagement & Popularity**
 
-   * The average time delay between publishing and trending varies across categories; for example, music videos often trend faster than news or vlogs.
-   * Videos published midweek (especially Tuesday–Thursday) have a slightly higher likelihood of trending.
-   * Trending activity shows monthly and seasonal variation, with noticeable peaks in certain months.
+- Which engagement metric (likes, dislikes, comments) most strongly correlates with trending success (`views`)?
+- Are videos with higher like-to-dislike ratios more likely to have higher view counts?
+- Do videos with comments disabled or ratings disabled trend differently than those with full engagement enabled?
 
-4. **Content Metadata & Strategy**
+---
 
-   * Repetitive tag patterns and specific buzzwords (e.g., “shocking”, “you won’t believe”) appear more often in trending content.
-   * Shorter, punchier titles with emotional or sensational language tend to attract more views and engagement.
+**3. Temporal Analysis**
 
-5. **Channel & Creator Influence**
+- What is the average time delay between `publish_time` and `trending_date` across categories?
+- Are there specific days of the week or times of day where videos are more likely to trend?
+- How does the trending frequency vary across different months or seasons?
 
-   * Some channels trend consistently due to content strategy, upload frequency, or niche dominance.
-   * These channels often specialize in specific categories and follow a repeatable format in thumbnails, tags, and publishing schedules.
+---
 
-6. **Video Status & Restrictions**
+**4. Content Metadata & Strategy**
 
-   * Engagement drops notably in videos where comments or ratings are disabled.
-   * Videos that later become unavailable (error or removal) sometimes exhibit abnormal engagement spikes, possibly due to controversy or policy violations.
+- Do certain tags or patterns in tags appear more frequently in trending videos?
+- How does title length or presence of clickbait-style words (e.g., "shocking", "you won’t believe") affect views or engagement?
 
+---
+
+**5. Creator & Channel Influence**
+
+- Which `channel_title` consistently appears on the trending list, and what are their common traits?
+- Do channels with repeated trending videos use consistent video formats, or categories?
+
+---
+
+**6. Video Status & Restrictions**
+
+- What is the impact of `comments_disabled`, `ratings_disabled`, or `video_error_or_removed` on engagement?
+- Do videos that are later removed or error out tend to have unusually high or low engagement?
+
+---
 ### 📊 Sample Visualizations
 
 #### Average Views by Category Name
@@ -252,6 +265,6 @@ Mahmoud Elgendy
 
 ## Contact
 
-For questions or support, please contact the project maintainer at \[[star7ana@gmail.com](mailto:star7ana@gmail.com)].
+For questions or support, please contact the project maintainer at \[[mahmoud.elgendy.2182003@gmail.com](mailto:mahmoud.elgendy.2182003@gmail.com)].
 
 # YouTube-Trending-EDA
