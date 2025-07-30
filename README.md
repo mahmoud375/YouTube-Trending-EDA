@@ -2,6 +2,10 @@
 
 ## Project Overview
 
+| 💡 **Final Insights & Reports** |
+|:---|
+| The final, summarized insights and detailed country-specific reports are available in the **`reports/`** directory. |
+
 This project analyzes trending YouTube videos across multiple countries, including Canada (CA), Germany (DE), France (FR), Great Britain (GB), India (IN), Japan (JP), South Korea (KR), Mexico (MX), Russia (RU), and the United States (US). By leveraging public datasets, the project employs data cleaning, exploratory data analysis (EDA), and visualization to uncover patterns in viewer engagement, content categories, and cross-country trends. The codebase is modular, reproducible, and designed for scalability.
 
 ## Objectives
@@ -80,6 +84,13 @@ YouTube-Trending-EDA/
 │   └── tables/                      # Summary tables (CSV format)
 │       ├── comparative/             # Cross-country summary data
 │       └── country_specific/        # Country-specific summary tables
+|
+├── reports/                         # Final reports and summarized insights
+│   ├── CA/
+│   │   └── report.md
+│   ├── ...
+│   └── US/
+│       └── report.md
 ├── src/                             # Python source code
 │   ├── analysis/
 │   │   ├── category_trends.py
