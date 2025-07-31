@@ -244,13 +244,13 @@ YouTube-Trending-EDA/
 - Do videos that are later removed or error out tend to have unusually high or low engagement?
 
 ---
-### 📊 Sample Visualizations
+## 📈 Sample Visualizations (CA)
 
-#### Average Views by Category Name
-![Average Views by Category Name](https://i.postimg.cc/5ym8FDVM/avg-viows-by-category-name.png)
+### Average Views by Category Name  
+![Average Views](outputs/plots/country_specific/CA/avg_views_by_category_name.png)
 
-#### Average Number of Days to Trend by Category
-![Average Number of Days to Trend by Category](https://i.postimg.cc/XNg5xMTR/Average-Number-of-Days-to-Trend-by-Category.png)
+### Average Number of Days to Trend by Category  
+![Average Days to Trend](outputs/plots/country_specific/CA/average_days_to_trend_by_category.png)
 
 
 

@@ -1,28 +1,38 @@
+# Ignore Python cache files
 __pycache__/
 *.py[cod]
+*.pyc
+*.pyo
+*.pyd
 
+# Jupyter checkpoints
 .ipynb_checkpoints/
+*.ipynb_checkpoints
 
+# Virtual environments
 venv/
 env/
 
-outputs/
-
-.vscode/
-
+# System files
 .DS_Store
 Thumbs.db
 
+# VSCode settings
+.vscode/
+
+# Environment variables
+.env
+
+# Ignore raw data and large files
 data/
 *.csv
 *.json
 
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.DS_Store
-.env
-*.ipynb_checkpoints
-outputs/plots/
-outputs/tables/
+
+# outputs/
+
+!outputs/
+!outputs/plots/
+!outputs/plots/**/*
+!outputs/tables/
+!outputs/tables/**/*
