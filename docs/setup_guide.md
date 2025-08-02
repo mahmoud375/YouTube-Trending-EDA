@@ -120,8 +120,6 @@ Then open relevant notebooks:
 
 * `notebooks/country_specific/EDA_US_Youtube.ipynb`
 * `notebooks/country_specific/EDA_CA_Youtube.ipynb`
-* `notebooks/comparative/Cross_Country_Trends.ipynb`
-* `notebooks/comparative/Engagement_Analysis.ipynb`
 
 ---
 

@@ -12,7 +12,6 @@ This project analyzes trending YouTube videos across multiple countries, includi
 
 * Identify trending video categories (e.g., Music, Gaming) and top channels by country.
 * Analyze engagement metrics (likes, comments, views) to understand viewer behavior.
-* Compare content preferences and engagement patterns across countries.
 * Provide reusable scripts and notebooks for data processing, analysis, and visualization.
 
 ## Dataset
@@ -38,15 +37,9 @@ After downloading and extracting the dataset, make sure the following directorie
 ```bash
 # Create country-specific data directories
 mkdir -p data/{CA,DE,FR,GB,IN,JP,KR,MX,RU,US}
-
-# Create output folders for storing results
-mkdir -p outputs/plots/comparative
-mkdir -p outputs/plots/country_specific/{CA,DE,FR,GB,IN,JP,KR,MX,RU,US}
-mkdir -p outputs/tables/comparative
-mkdir -p outputs/tables/country_specific/{CA,DE,FR,GB,IN,JP,KR,MX,RU,US}
 ```
 
-You can run the above commands in a Unix-based shell (e.g., Linux, macOS, or Git Bash on Windows). If you're using Windows CMD or PowerShell, you can create the folders manually or with equivalent commands.
+You can run the above command in a Unix-based shell (e.g., Linux, macOS, or Git Bash on Windows). If you're using Windows CMD or PowerShell, you can create the folders manually or with equivalent commands.
 
 **Note**: The dataset is not included in this repository due to its size and licensing. Ensure proper attribution to the dataset source. Refer to `docs/data_dictionary.md` for detailed descriptions of data fields.
 
@@ -55,10 +48,10 @@ You can run the above commands in a Unix-based shell (e.g., Linux, macOS, or Git
 ```
 YouTube-Trending-EDA/
 ├── config/                          # Configuration files
-│   ├── paths.yaml                  # File paths for data and outputs
-│   └── settings.yaml               # Analysis parameters
+│   ├── paths.yaml                   # File paths for data and outputs
+│   └── settings.yaml                # Analysis parameters
 ├── data/                            # Raw datasets (not tracked in Git)
-│   ├── CA/                         # Canada data
+│   ├── CA/                          # Canada data
 │   │   ├── CA_category_id.json
 │   │   └── CAvideos.csv
 │   ├── DE/                          # Germany data
@@ -71,18 +64,13 @@ YouTube-Trending-EDA/
 │   ├── methodology.md
 │   └── setup_guide.md
 ├── notebooks/                       # Jupyter notebooks for analysis
-│   ├── comparative/
-│   │   ├── Cross_Country_Trends.ipynb
-│   │   └── Engagement_Analysis.ipynb
 │   └── country_specific/
 │       ├── EDA_CA_Youtube.ipynb
 │       └── EDA_US_Youtube.ipynb
 ├── outputs/                         # Generated outputs
 │   ├── plots/                       # Visualizations
-│   │   ├── comparative/             # Cross-country plots
 │   │   └── country_specific/        # Country-specific plots (e.g., CA, US, etc.)
 │   └── tables/                      # Summary tables (CSV format)
-│       ├── comparative/             # Cross-country summary data
 │       └── country_specific/        # Country-specific summary tables
 |
 ├── reports/                         # Final reports and summarized insights
@@ -157,22 +145,15 @@ YouTube-Trending-EDA/
      * `EDA_US_Youtube.ipynb`
      * `EDA_EG_Youtube.ipynb`
 
-2. **Cross-Country Comparison**:
-
-   * For multi-country analysis and trends, use:
-     `notebooks/comparative/Cross_Country_Trends.ipynb`
-
-3. **Outputs Structure**:
+2. **Outputs Structure**:
 
    All generated plots and summary tables are saved in the `outputs/` directory:
 
    ```
    outputs/
    ├── plots/
-   │   ├── comparative/         # Cross-country visualizations
    │   └── country_specific/    # Visualizations per country (e.g., US, EG)
    └── tables/
-       ├── comparative/         # Summary data for cross-country analysis
        └── country_specific/    # Per-country summary tables (CSV format)
    ```
 

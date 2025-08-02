@@ -40,15 +40,7 @@ The dataset was sourced from Kaggle: [YouTube Trending Video Dataset](https://ww
 
 ---
 
-## 5. Cross-Country Comparative Analysis
-
-* Merged cleaned datasets from multiple countries (US, CA, GB, etc.) into a unified format.
-* Compared content preferences across regions (e.g., top categories in US vs. India).
-* Studied variation in engagement patterns (e.g., like-to-dislike ratios, comments) between countries.
-
----
-
-## 6. Tools and Libraries
+## 5. Tools and Libraries
 
 * **Pandas**, **NumPy**: data preprocessing and aggregation
 * **Matplotlib**, **Seaborn**: statistical and temporal visualizations
@@ -57,7 +49,7 @@ The dataset was sourced from Kaggle: [YouTube Trending Video Dataset](https://ww
 
 ---
 
-## 7. Limitations
+## 6. Limitations
 
 * Dataset includes only trending videos, not the complete set of uploaded videos.
 * Metrics like dislikes may be affected due to YouTube’s policy changes.
@@ -66,7 +58,7 @@ The dataset was sourced from Kaggle: [YouTube Trending Video Dataset](https://ww
 
 ---
 
-## 8. Future Work
+## 7. Future Work
 
 * Use YouTube API to collect real-time or more granular data.
 * Build predictive models to estimate a video’s likelihood of trending.
@@ -75,7 +67,7 @@ The dataset was sourced from Kaggle: [YouTube Trending Video Dataset](https://ww
 
 ---
 
-## 9. Reproducibility and Automation
+## 8. Reproducibility and Automation
 
 * Modular scripts ensure reproducible data cleaning, analysis, and visualization.
 * Configuration files (`config/paths.yaml`, `config/settings.yaml`) make the pipeline flexible and adaptable to new datasets.
