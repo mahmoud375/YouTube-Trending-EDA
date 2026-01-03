@@ -42,9 +42,6 @@ def plot_category_trends(dataframe, category_col='category_name', value_col='vie
     return fig
 
 
-import matplotlib.pyplot as plt
-import pandas as pd
-
 def plot_category_growth(growth_df: pd.DataFrame, title: str = "Category Growth Over Time") -> plt.Figure:
     """
     Plots the monthly growth of YouTube video categories over time.

@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+from src.analysis.engagement import correlation_by_category_before_trend
 
 
 def add_plot_engagement_labels(ax, title="", xlabel="", ylabel=""):
@@ -19,44 +20,6 @@ def add_plot_engagement_labels(ax, title="", xlabel="", ylabel=""):
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
 
-def correlation_by_category_before_trend(df: pd.DataFrame) -> pd.Series:
-    """
-    Compute correlation between views and per-day engagement metrics before trending,
-    grouped by video category.
-
-    Args:
-        df (pd.DataFrame): Dataset with YouTube video data including 'category_name',
-                           'likes', 'dislikes', 'comment_count', 'views', 'days_to_trend'.
-
-    Returns:
-        pd.Series: Correlation of each metric (per day before trend) with views.
-    """
-    df = df.copy()
-
-    # Filter out invalid values
-    df = df[df["days_to_trend"] > 0]  # remove invalid zeros to avoid division by zero
-
-    # Estimate engagement per day before trending
-    df["likes_per_day"] = df["likes"] / df["days_to_trend"]
-    df["dislikes_per_day"] = df["dislikes"] / df["days_to_trend"]
-    df["comments_per_day"] = df["comment_count"] / df["days_to_trend"]
-    df["views_per_day"] = df["views"] / df["days_to_trend"]
-
-    grouped = df.groupby("category_name").agg(
-        avg_views_per_day=("views_per_day", "mean"),
-        avg_likes_per_day=("likes_per_day", "mean"),
-        avg_dislikes_per_day=("dislikes_per_day", "mean"),
-        avg_comments_per_day=("comments_per_day", "mean")
-    ).reset_index()
-
-    corr_matrix = grouped[[
-        "avg_views_per_day",
-        "avg_likes_per_day",
-        "avg_dislikes_per_day",
-        "avg_comments_per_day"
-    ]].corr()
-
-    return corr_matrix["avg_views_per_day"].sort_values(ascending=False)
 
 def plot_engagement_disabled_stats(df: pd.DataFrame) -> plt.Figure:
     """

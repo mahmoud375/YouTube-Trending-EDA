@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import json
+from pathlib import Path
 
 def dataset_merger(file_paths, how='inner', on=None):
     """
@@ -17,14 +18,17 @@ def dataset_merger(file_paths, how='inner', on=None):
     dataframes = []
 
     for file in file_paths:
-        if not os.path.exists(file):
-            raise FileNotFoundError(f"File not found: {file}")
+        # Convert Path objects to strings for compatibility
+        file_str = str(file) if isinstance(file, Path) else file
         
-        if file.endswith('.csv'):
-            df = pd.read_csv(file)
+        if not os.path.exists(file_str):
+            raise FileNotFoundError(f"File not found: {file_str}")
+        
+        if file_str.endswith('.csv'):
+            df = pd.read_csv(file_str)
 
-        elif file.endswith('.json'):
-            with open(file, 'r') as f:
+        elif file_str.endswith('.json'):
+            with open(file_str, 'r') as f:
                 data = json.load(f)
                 if "items" in data and isinstance(data["items"], list):
                     # Extract 'id' and 'snippet.title'

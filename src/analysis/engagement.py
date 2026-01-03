@@ -194,39 +194,6 @@ def engagement_disabled_analysis(df: pd.DataFrame) -> pd.DataFrame:
 
 
 
-def compute_engagement_rate_df(df: pd.DataFrame) -> pd.Series:
-    """
-    Compute engagement rate for a DataFrame of videos.
-    Engagement rate = (likes + comment_count) / views * 100
-    """
-    safe_views = df["views"].replace(0, pd.NA)
-    return ((df["likes"] + df["comment_count"]) / safe_views) * 100
-
-def summarize_engagement_by_category_df(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Summarize engagement metrics grouped by category_name.
-
-    Args:
-        df (pd.DataFrame): Full video dataset with category_name, likes, comment_count, and views columns.
-
-    Returns:
-        pd.DataFrame: Summary with category_name, video_count, total_likes, total_comments,
-                      total_views, avg_engagement_rate.
-    """
-    df = df.copy()
-    df["engagement_rate"] = compute_engagement_rate_df(df).fillna(0)
-
-    grouped = df.groupby("category_name").agg(
-        video_count=("video_id", "count"),
-        total_likes=("likes", "sum"),
-        total_comments=("comment_count", "sum"),
-        total_views=("views", "sum"),
-        avg_engagement_rate=("engagement_rate", "mean")
-    ).reset_index()
-
-    return grouped
-
-
 def compare_status_impact(df: pd.DataFrame) -> pd.DataFrame:
     """
     Compare the impact of video status flags on engagement metrics.
